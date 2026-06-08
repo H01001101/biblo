@@ -27,7 +27,12 @@ export default async function ListItemDetailPage({
     where: { itemId, listId: id, list: { ownerId: user.id } },
     include: {
       list: { select: { id: true, name: true } },
-      item: { include: { type: true } },
+      item: {
+        include: {
+          type: true,
+          createdBy: { select: { username: true, role: true } },
+        },
+      },
     },
   });
 
@@ -104,6 +109,12 @@ export default async function ListItemDetailPage({
           <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">
             {item.description || "Aucune description."}
           </p>
+
+          {item.createdBy && item.createdBy.role !== "ADMIN" && (
+            <p className="mt-3 text-xs text-[var(--color-muted)]">
+              Ajouté par {item.createdBy.username}
+            </p>
+          )}
 
           <div className="mt-6">
             <Link href={`/lists/${listItem.list.id}`} className="btn-secondary">

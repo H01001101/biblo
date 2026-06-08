@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { getItemAverage, formatAvg } from "@/lib/queries";
 import { parseProgressFields } from "@/lib/progress";
 import AddToListForm from "@/components/AddToListForm";
+import AdminItemEditor from "@/components/AdminItemEditor";
 
 export default async function ItemPage({
   params,
@@ -16,23 +17,40 @@ export default async function ItemPage({
   const [item, user] = await Promise.all([
     prisma.item.findUnique({
       where: { id },
-      include: { type: true },
+      include: {
+        type: true,
+        createdBy: { select: { username: true, role: true } },
+      },
     }),
     getCurrentUser(),
   ]);
 
   if (!item || item.status !== "APPROVED") notFound();
 
-  const { avg, count } = await getItemAverage(item.id);
+  const isAdmin = user?.role === "ADMIN";
 
-  const lists =
-    user && user.role !== "ADMIN"
-      ? await prisma.list.findMany({
+  const [{ avg, count }, lists, types] = await Promise.all([
+    getItemAverage(item.id),
+    user && !isAdmin
+      ? prisma.list.findMany({
           where: { ownerId: user.id },
           orderBy: { position: "asc" },
           select: { id: true, name: true },
         })
-      : [];
+      : Promise.resolve([]),
+    isAdmin
+      ? prisma.itemType.findMany({
+          orderBy: { name: "asc" },
+          select: { id: true, name: true },
+        })
+      : Promise.resolve([]),
+  ]);
+
+  // Créateur affiché discrètement, sauf si l'élément a été ajouté par un admin.
+  const creator =
+    item.createdBy && item.createdBy.role !== "ADMIN"
+      ? item.createdBy.username
+      : null;
 
   return (
     <div>
@@ -75,15 +93,28 @@ export default async function ItemPage({
             {item.description || "Aucune description."}
           </p>
 
+          {creator && (
+            <p className="mt-3 text-xs text-[var(--color-muted)]">
+              Ajouté par {creator}
+            </p>
+          )}
+
           <div className="mt-6 max-w-md">
             {!user ? (
               <Link href="/login" className="btn-primary">
                 Se connecter pour ajouter
               </Link>
-            ) : user.role === "ADMIN" ? (
-              <p className="rounded-lg bg-[var(--color-surface-2)] px-3 py-2 text-sm text-[var(--color-muted)]">
-                Les admins ne gèrent pas de listes personnelles
-              </p>
+            ) : isAdmin ? (
+              <AdminItemEditor
+                item={{
+                  id: item.id,
+                  name: item.name,
+                  image: item.image,
+                  description: item.description,
+                  typeId: item.typeId,
+                }}
+                types={types}
+              />
             ) : (
               <div className="card p-4">
                 <h2 className="mb-3 font-medium">Ajouter à une liste</h2>

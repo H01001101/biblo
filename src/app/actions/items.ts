@@ -7,7 +7,7 @@ import { put } from "@vercel/blob";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireUser, requireAdmin, getCurrentUser } from "@/lib/auth";
+import { requireUser, requireAdmin } from "@/lib/auth";
 import type { ProgressField } from "@/lib/progress";
 
 export type ActionState = { error?: string; ok?: boolean };
@@ -255,4 +255,50 @@ export async function moderateItem(formData: FormData) {
 
   revalidatePath("/admin");
   revalidatePath("/");
+}
+
+// Modification d'un élément déjà au catalogue (administrateur).
+// Si aucune nouvelle image n'est fournie, on conserve l'image actuelle
+// (le formulaire pré-remplit le champ URL avec l'image existante).
+export async function adminUpdateItem(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+  const itemId = String(formData.get("itemId") ?? "");
+  const item = await prisma.item.findUnique({ where: { id: itemId } });
+  if (!item) return { error: "Élément introuvable." };
+
+  const name = String(formData.get("name") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const typeId = String(formData.get("typeId") ?? "");
+  if (name.length < 2) {
+    return { error: "Le nom doit faire au moins 2 caractères." };
+  }
+
+  let image: string;
+  try {
+    image = await resolveImage(formData);
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Image invalide." };
+  }
+
+  await prisma.item.update({
+    where: { id: itemId },
+    data: { name, description, image, ...(typeId ? { typeId } : {}) },
+  });
+
+  revalidatePath("/");
+  revalidatePath(`/item/${itemId}`);
+  return { ok: true };
+}
+
+// Suppression d'un élément du catalogue (administrateur).
+// Cascade : l'élément est aussi retiré de toutes les listes des utilisateurs.
+export async function adminDeleteItem(formData: FormData) {
+  await requireAdmin();
+  const itemId = String(formData.get("itemId") ?? "");
+  await prisma.item.delete({ where: { id: itemId } });
+  revalidatePath("/");
+  redirect("/");
 }
