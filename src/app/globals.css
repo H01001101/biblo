@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Variante "dark" pilotée par la classe .dark sur <html> */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-bg: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f1f4;
+  --color-ink: #1c1c1e;
+  --color-muted: #6b7280;
+  --color-line: #e5e7eb;
+  --color-accent: #4f46e5;
+  --color-accent-ink: #ffffff;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Thème sombre : on redéfinit simplement les variables de couleur */
+.dark {
+  --color-bg: #0f1115;
+  --color-surface: #1a1d23;
+  --color-surface-2: #242832;
+  --color-ink: #e7e8ea;
+  --color-muted: #9aa1ad;
+  --color-line: #2e333d;
+  --color-accent: #6366f1;
+  --color-accent-ink: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- Petits composants réutilisables (design épuré) --- */
+@layer components {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply bg-[var(--color-accent)] text-[var(--color-accent-ink)] hover:opacity-90;
+  }
+  .btn-secondary {
+    @apply bg-[var(--color-surface)] text-[var(--color-ink)] border border-[var(--color-line)] hover:bg-[var(--color-surface-2)];
+  }
+  .btn-ghost {
+    @apply text-[var(--color-muted)] hover:bg-[var(--color-surface-2)];
+  }
+  .btn-danger {
+    @apply bg-[var(--color-surface)] text-red-600 border border-red-300/60 hover:bg-red-500/10;
+  }
+  .card {
+    @apply bg-[var(--color-surface)] border border-[var(--color-line)] rounded-xl;
+  }
+  .input {
+    @apply w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] text-[var(--color-ink)] px-3 py-2 text-sm outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/20;
+  }
+  .label {
+    @apply block text-sm font-medium text-[var(--color-ink)] mb-1;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full bg-[var(--color-surface-2)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-muted)];
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================================================================
+   STYLE MODERNE — inspiré de l'interface "Liquid Glass" d'iOS 26.
+   Activé par la classe .ui-modern sur <html>. La classe .ui-classic
+   (ou l'absence de .ui-modern) conserve le design d'origine.
+   ========================================================================= */
+
+.ui-modern {
+  --radius-glass: 1.25rem;
+}
+
+/* Fond dégradé doux derrière toute l'appli */
+.ui-modern body {
+  background:
+    radial-gradient(1100px 700px at 12% -8%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 60%),
+    radial-gradient(900px 600px at 100% 0%, color-mix(in srgb, #22d3ee 18%, transparent), transparent 55%),
+    radial-gradient(800px 700px at 50% 120%, color-mix(in srgb, #f472b6 14%, transparent), transparent 60%),
+    var(--color-bg);
+  background-attachment: fixed;
+}
+
+/* Cartes en verre dépoli */
+.ui-modern .card {
+  background-color: color-mix(in srgb, var(--color-surface) 65%, transparent);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--color-ink) 10%, transparent);
+  border-radius: var(--radius-glass);
+  box-shadow:
+    0 10px 30px -12px color-mix(in srgb, var(--color-ink) 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 35%, transparent);
+}
+
+/* Barre de navigation : verre plus prononcé */
+.ui-modern header {
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 8%, transparent);
+}
+
+/* Boutons : pastilles avec dégradé et relief */
+.ui-modern .btn,
+.ui-modern .btn-primary,
+.ui-modern .btn-secondary,
+.ui-modern .btn-ghost,
+.ui-modern .btn-danger {
+  border-radius: 9999px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+.ui-modern .btn-primary {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-accent) 86%, #ffffff),
+    var(--color-accent)
+  );
+  box-shadow:
+    0 8px 18px -6px color-mix(in srgb, var(--color-accent) 70%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 45%, transparent);
+}
+.ui-modern .btn-primary:hover {
+  transform: translateY(-1px);
+}
+.ui-modern .btn-secondary {
+  background-color: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+}
+.ui-modern .btn-secondary:hover {
+  transform: translateY(-1px);
+}
+
+/* Champs de saisie translucides */
+.ui-modern .input {
+  background-color: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 12%, transparent);
+}
+
+/* Badges en verre */
+.ui-modern .badge {
+  background-color: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Le logo n'a pas besoin du fond accent en mode moderne (image dédiée) */
+.ui-modern .brand-badge {
+  box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--color-accent) 70%, transparent);
 }

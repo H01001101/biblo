@@ -1,0 +1,110 @@
+// Schéma de la base de données Biblo
+// Doc : https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Un compte (utilisateur ou administrateur)
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("USER") // "USER" | "ADMIN"
+  theme        String   @default("light") // "light" | "dark"
+  uiStyle      String   @default("modern") // "modern" (iOS 26) | "classic"
+  createdAt    DateTime @default(now())
+
+  lists            List[]
+  createdItems     Item[]       @relation("ItemCreator")
+  sentRequests     Friendship[] @relation("Requester")
+  receivedRequests Friendship[] @relation("Addressee")
+}
+
+// Un type d'élément (Manga, Film, ... ou type personnalisé)
+// Définit les libellés des 3 états d'avancement et les champs de progression.
+model ItemType {
+  id               String   @id @default(cuid())
+  name             String   @unique
+  isNative         Boolean  @default(false)
+  statusTodo       String // ex: "À lire"
+  statusInProgress String // ex: "En cours"
+  statusDone       String // ex: "Lu"
+  // JSON décrivant les champs à remplir quand l'élément est "En cours".
+  // Voir src/lib/progress.ts pour le format.
+  progressFields   String   @default("[]")
+  createdAt        DateTime @default(now())
+
+  items Item[]
+}
+
+// Un élément du catalogue
+model Item {
+  id          String   @id @default(cuid())
+  name        String
+  image       String   @default("")
+  description String   @default("")
+  status      String   @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  createdAt   DateTime @default(now())
+
+  typeId String
+  type   ItemType @relation(fields: [typeId], references: [id])
+
+  createdById String?
+  createdBy   User?   @relation("ItemCreator", fields: [createdById], references: [id])
+
+  listItems ListItem[]
+}
+
+// Une liste appartenant à un utilisateur (ex: "Mes Mangas")
+model List {
+  id        String   @id @default(cuid())
+  name      String
+  hidden    Boolean  @default(false)
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  items ListItem[]
+}
+
+// Un élément placé dans une liste, avec note perso, état d'avancement et progression
+model ListItem {
+  id       String   @id @default(cuid())
+  rating   Float? // note personnelle 0-10, par pas de 0,5
+  status   String   @default("todo") // "todo" | "inProgress" | "done"
+  progress String? // JSON des valeurs de progression
+  position Int      @default(0) // pour départager les éléments de même note
+  addedAt  DateTime @default(now())
+
+  listId String
+  list   List   @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, itemId])
+}
+
+// Une relation d'amitié (demande ou amitié confirmée)
+model Friendship {
+  id        String   @id @default(cuid())
+  status    String   @default("PENDING") // "PENDING" | "ACCEPTED"
+  createdAt DateTime @default(now())
+
+  requesterId String
+  requester   User   @relation("Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  addresseeId String
+  addressee   User   @relation("Addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+}
