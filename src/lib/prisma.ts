@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 // On réutilise une seule instance du client Prisma (évite d'ouvrir trop de
 // connexions lors des rechargements à chaud en développement).

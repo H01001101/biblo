@@ -1,6 +1,6 @@
 import "dotenv/config";
 import bcrypt from "bcryptjs";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NATIVE_TYPES } from "../src/lib/progress";
 
 // Initialisation d'une base de PRODUCTION propre :
