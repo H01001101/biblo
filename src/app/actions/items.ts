@@ -21,9 +21,19 @@ const EXT_BY_TYPE: Record<string, string> = {
   "image/avif": "avif",
 };
 
+// Jeton Vercel Blob : on accepte le nom standard ou un préfixe personnalisé
+// (selon le préfixe choisi à la création du store, ex: "biblo_READ_WRITE_TOKEN").
+function getBlobToken(): string | undefined {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
+  const key = Object.keys(process.env).find((k) =>
+    k.endsWith("_READ_WRITE_TOKEN"),
+  );
+  return key ? process.env[key] : undefined;
+}
+
 // Enregistre une image envoyée en fichier et renvoie son URL.
-// - En production (Vercel) : envoi vers Vercel Blob si BLOB_READ_WRITE_TOKEN est défini.
-// - En local (sans token) : écriture dans public/uploads.
+// - En production (Vercel) : envoi vers Vercel Blob si un jeton Blob est défini.
+// - En local (sans jeton) : écriture dans public/uploads.
 // Si aucun fichier valide, on retombe sur l'URL éventuellement fournie.
 async function resolveImage(formData: FormData): Promise<string> {
   const file = formData.get("imageFile");
@@ -39,8 +49,12 @@ async function resolveImage(formData: FormData): Promise<string> {
     }
     const name = `${crypto.randomUUID()}.${ext}`;
 
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(`uploads/${name}`, file, { access: "public" });
+    const blobToken = getBlobToken();
+    if (blobToken) {
+      const blob = await put(`uploads/${name}`, file, {
+        access: "public",
+        token: blobToken,
+      });
       return blob.url;
     }
 
