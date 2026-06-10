@@ -10,10 +10,17 @@ import AdminItemEditor from "@/components/AdminItemEditor";
 
 export default async function ItemPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { id } = await params;
+  const { from } = await searchParams;
+  const back =
+    from === "nouveautes"
+      ? { href: "/nouveautes", label: "← Retour aux nouveautés" }
+      : { href: "/", label: "← Retour au catalogue" };
 
   const [item, user] = await Promise.all([
     prisma.item.findUnique({
@@ -56,10 +63,10 @@ export default async function ItemPage({
   return (
     <div>
       <Link
-        href="/"
+        href={back.href}
         className="mb-4 inline-flex text-sm text-[var(--color-muted)] hover:underline"
       >
-        ← Retour au catalogue
+        {back.label}
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr]">

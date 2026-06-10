@@ -28,7 +28,7 @@ export default async function NouveautesPage() {
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {items.map((c) => (
-            <ItemCard key={c.id} {...c} />
+            <ItemCard key={c.id} {...c} from="nouveautes" />
           ))}
         </div>
       )}

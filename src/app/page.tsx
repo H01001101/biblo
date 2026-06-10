@@ -32,7 +32,7 @@ export default async function HomePage({
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Catalogue</h1>
           <p className="text-sm text-[var(--color-muted)]">
-            Parcoure les éléments et ajoute-les à tes listes
+            Parcours les éléments et ajoute-les à tes listes
           </p>
         </div>
         {user ? (
@@ -59,7 +59,7 @@ export default async function HomePage({
         <div className="card grid place-items-center gap-2 p-12 text-center">
           <p className="font-medium">Aucun élément trouvé</p>
           <p className="text-sm text-[var(--color-muted)]">
-            Essaye de modifier les filtres, ou crée l&apos;élément manquant
+            Essaie de modifier les filtres, ou crée l&apos;élément manquant
           </p>
         </div>
       ) : (

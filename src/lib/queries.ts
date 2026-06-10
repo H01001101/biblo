@@ -19,6 +19,62 @@ export type CatalogResult = {
   total: number;
 };
 
+// Normalise un texte pour la recherche : minuscules, sans accents, sans
+// espaces ni ponctuation. Ainsi "One Piece" et "onepiece" deviennent identiques.
+function normalizeForSearch(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
+// Score de correspondance entre une requête et un nom (tous deux normalisés).
+// Plus c'est petit, mieux c'est. null = pas de correspondance.
+// - sous-chaîne exacte : score = position (0, 1, …)
+// - sinon sous-séquence (lettres dans l'ordre, fautes/lettres manquantes
+//   tolérées) : score 1000 + largeur de la correspondance (plus serré = mieux).
+function trigrams(s: string): Set<string> {
+  const padded = `  ${s}  `;
+  const g = new Set<string>();
+  for (let i = 0; i < padded.length - 2; i++) g.add(padded.slice(i, i + 3));
+  return g;
+}
+
+function searchScore(qnorm: string, nnorm: string): number | null {
+  if (!qnorm) return 0;
+
+  // 1) Sous-chaîne exacte (recherche partielle) — meilleur score.
+  const idx = nnorm.indexOf(qnorm);
+  if (idx >= 0) return idx;
+
+  // 2) Sous-séquence (lettres dans l'ordre : espaces/lettres manquants tolérés).
+  let i = 0;
+  let first = -1;
+  let last = -1;
+  for (let j = 0; j < nnorm.length && i < qnorm.length; j++) {
+    if (nnorm[j] === qnorm[i]) {
+      if (first < 0) first = j;
+      last = j;
+      i++;
+    }
+  }
+  if (i === qnorm.length) return 1000 + (last - first);
+
+  // 3) Tolérance aux fautes (trigrammes) pour les requêtes un peu longues :
+  //    gère les inversions de lettres et coquilles (ex: "centruy" -> "century").
+  if (qnorm.length >= 4) {
+    const qg = trigrams(qnorm);
+    const ng = trigrams(nnorm);
+    let inter = 0;
+    for (const g of qg) if (ng.has(g)) inter++;
+    const containment = inter / qg.size;
+    if (containment >= 0.5) return 2000 + Math.round((1 - containment) * 1000);
+  }
+
+  return null;
+}
+
 // Récupère le catalogue (éléments validés) avec moyenne des notes,
 // filtré par type / note minimale / recherche, puis paginé.
 export async function getCatalog(opts: {
@@ -27,21 +83,10 @@ export async function getCatalog(opts: {
   q?: string;
   page?: number;
 }): Promise<CatalogResult> {
-  // Recherche permissive : insensible à la casse, par mots (chaque mot doit
-  // apparaître quelque part dans le nom, dans n'importe quel ordre).
-  const words = (opts.q ?? "").trim().split(/\s+/).filter(Boolean);
-
   const items = await prisma.item.findMany({
     where: {
       status: "APPROVED",
       ...(opts.typeId ? { typeId: opts.typeId } : {}),
-      ...(words.length
-        ? {
-            AND: words.map((w) => ({
-              name: { contains: w, mode: "insensitive" as const },
-            })),
-          }
-        : {}),
     },
     include: {
       type: { select: { name: true } },
@@ -70,6 +115,17 @@ export async function getCatalog(opts: {
 
   if (opts.minNote && opts.minNote > 0) {
     cards = cards.filter((c) => c.avg != null && c.avg >= opts.minNote!);
+  }
+
+  // Recherche tolérante (espaces manquants, fautes de frappe), classée par
+  // pertinence. Catalogue de taille modeste -> calcul en mémoire.
+  const qnorm = normalizeForSearch(opts.q ?? "");
+  if (qnorm) {
+    cards = cards
+      .map((c) => ({ c, s: searchScore(qnorm, normalizeForSearch(c.name)) }))
+      .filter((x): x is { c: CatalogCard; s: number } => x.s !== null)
+      .sort((a, b) => a.s - b.s || a.c.name.localeCompare(b.c.name))
+      .map((x) => x.c);
   }
 
   const total = cards.length;

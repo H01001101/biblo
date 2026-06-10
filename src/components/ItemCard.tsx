@@ -8,16 +8,18 @@ export default function ItemCard({
   image,
   typeName,
   avg,
+  from,
 }: {
   id: string;
   name: string;
   image: string;
   typeName: string;
   avg: number | null;
+  from?: string; // provenance, pour adapter le bouton "Retour" de la fiche
 }) {
   return (
     <Link
-      href={`/item/${id}`}
+      href={from ? `/item/${id}?from=${from}` : `/item/${id}`}
       className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-md"
     >
       <div className="aspect-[2/3] w-full overflow-hidden bg-[var(--color-surface-2)]">
