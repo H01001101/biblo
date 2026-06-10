@@ -30,34 +30,26 @@ export async function adminCreateUser(
   const passwordHash = await bcrypt.hash(password, 10);
   await prisma.user.create({ data: { username, passwordHash, role } });
   revalidatePath("/admin/users");
-  return { success: `Compte « ${username} » créé.` };
+  return { success: `Compte "${username}" créé.` };
 }
 
+// L'admin peut changer le rôle et réinitialiser le mot de passe, mais PAS le
+// nom d'utilisateur (chaque utilisateur gère son propre username).
+// On ne met à jour que les champs réellement fournis (rôle OU mot de passe).
 export async function adminUpdateUser(formData: FormData) {
   await requireAdmin();
   const userId = String(formData.get("userId") ?? "");
-  const username = String(formData.get("username") ?? "").trim();
-  const role = String(formData.get("role") ?? "USER") === "ADMIN" ? "ADMIN" : "USER";
+  const roleRaw = formData.get("role");
   const newPassword = String(formData.get("newPassword") ?? "");
 
-  if (!USERNAME_RE.test(username)) return;
+  const data: { role?: string; passwordHash?: string } = {};
+  if (roleRaw === "ADMIN" || roleRaw === "USER") data.role = roleRaw;
+  if (newPassword.length >= 6) {
+    data.passwordHash = await bcrypt.hash(newPassword, 10);
+  }
+  if (Object.keys(data).length === 0) return;
 
-  // Évite les collisions de nom avec un autre compte.
-  const clash = await prisma.user.findFirst({
-    where: { username, NOT: { id: userId } },
-  });
-  if (clash) return;
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      username,
-      role,
-      ...(newPassword.length >= 6
-        ? { passwordHash: await bcrypt.hash(newPassword, 10) }
-        : {}),
-    },
-  });
+  await prisma.user.update({ where: { id: userId }, data });
   revalidatePath("/admin/users");
 }
 

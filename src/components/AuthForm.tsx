@@ -21,7 +21,7 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
         </h1>
         <p className="mb-5 text-sm text-[var(--color-muted)]">
           {isLogin
-            ? "Connectez-vous pour gérer vos listes."
+            ? "Connecte-toi pour gérer tes listes."
             : "Choisissez un nom d'utilisateur et un mot de passe."}
         </p>
 

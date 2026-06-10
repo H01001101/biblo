@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatAvg } from "@/lib/queries";
+import { NoImageIcon } from "@/components/icons";
 
 export default function ItemCard({
   id,
@@ -29,7 +30,7 @@ export default function ItemCard({
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-[var(--color-muted)]/50">
-            <span className="text-4xl">📚</span>
+            <NoImageIcon />
           </div>
         )}
       </div>

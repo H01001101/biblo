@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { NoImageIcon } from "@/components/icons";
 import { getCurrentUser } from "@/lib/auth";
 import { getItemAverage, formatAvg } from "@/lib/queries";
 import { parseProgressFields } from "@/lib/progress";
@@ -71,9 +72,7 @@ export default async function ItemPage({
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="grid h-full place-items-center text-5xl text-[var(--color-muted)]/50">
-              x
-            </div>
+            <div className="grid h-full place-items-center text-5xl text-[var(--color-muted)]/50"><NoImageIcon /></div>
           )}
         </div>
 

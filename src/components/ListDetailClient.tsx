@@ -22,7 +22,6 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   updateListItem,
   removeListItem,
-  moveListItem,
   reorderListItems,
 } from "@/app/actions/lists";
 import {
@@ -36,6 +35,7 @@ import {
 import ProgressFieldsInput from "@/components/ProgressFieldsInput";
 import RatingSlider from "@/components/RatingSlider";
 import ConfirmButton from "@/components/ConfirmButton";
+import { NoImageIcon } from "@/components/icons";
 
 type TypeInfo = {
   statusTodo: string;
@@ -123,7 +123,7 @@ function RowEditor({ row }: { row: ListItemRow }) {
   );
 }
 
-// Contenu visuel d'une ligne (commun aux modes « glisser-déposer » et simple).
+// Contenu visuel d'une ligne (commun aux modes "glisser-déposer" et simple).
 function RowContent({
   row,
   listId,
@@ -145,34 +145,8 @@ function RowContent({
   return (
     <div className="card overflow-hidden">
       <div className="flex items-center gap-3 p-3">
-        {/* Poignée de glissement (si activée) + flèches de réordonnancement */}
-        <div className="flex flex-col items-center gap-1">
-          {dragHandle}
-          <div className="flex flex-col">
-            <form action={moveListItem}>
-              <input type="hidden" name="listItemId" value={row.listItemId} />
-              <input type="hidden" name="direction" value="up" />
-              <button
-                type="submit"
-                className="px-1 text-[var(--color-muted)] hover:text-[var(--color-ink)]"
-                title="Monter"
-              >
-                ▲
-              </button>
-            </form>
-            <form action={moveListItem}>
-              <input type="hidden" name="listItemId" value={row.listItemId} />
-              <input type="hidden" name="direction" value="down" />
-              <button
-                type="submit"
-                className="px-1 text-[var(--color-muted)] hover:text-[var(--color-ink)]"
-                title="Descendre"
-              >
-                ▼
-              </button>
-            </form>
-          </div>
-        </div>
+        {/* Poignée de glisser-déposer (uniquement en vue complète) */}
+        {dragHandle && <div className="shrink-0">{dragHandle}</div>}
 
         <Link href={`/lists/${listId}/${row.itemId}`} className="shrink-0">
           <div className="h-28 w-20 overflow-hidden rounded-lg bg-[var(--color-surface-2)]">
@@ -184,8 +158,8 @@ function RowContent({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="grid h-full place-items-center text-2xl text-[var(--color-muted)]/50">
-                📚
+              <div className="grid h-full place-items-center text-[var(--color-muted)]/50">
+                <NoImageIcon />
               </div>
             )}
           </div>
@@ -428,7 +402,7 @@ export default function ListDetailClient({
           <p className="mb-3 text-sm text-[var(--color-muted)]">
             Triés par note.{" "}
             {filter === "all"
-              ? "Glisse la poignée ⠿ (ou utilise ▲ ▼) pour classer les éléments de même note"
+              ? "Glisse un élément par sa poignée pour classer ceux de même note"
               : "Retire le filtre pour réordonner par glisser-déposer"}
           </p>
 

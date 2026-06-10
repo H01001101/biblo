@@ -73,6 +73,11 @@ export default function Nav({ user }: { user: CurrentUser | null }) {
 
         <nav className="flex flex-1 items-center gap-1 overflow-x-auto">
           <Tab href="/" label="Catalogue" active={isActive("/")} />
+          <Tab
+            href="/nouveautes"
+            label="Nouveautés"
+            active={isActive("/nouveautes")}
+          />
           {user && !isAdmin && (
             <Tab
               href="/lists"

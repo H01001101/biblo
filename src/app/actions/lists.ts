@@ -14,6 +14,25 @@ async function requireListOwner(listId: string) {
   return { user, list };
 }
 
+// Enregistre l'ordre des listes de l'utilisateur (glisser-déposer).
+export async function reorderLists(orderedIds: string[]) {
+  const user = await requireUser();
+  const owned = await prisma.list.findMany({
+    where: { ownerId: user.id },
+    select: { id: true },
+  });
+  const valid = new Set(owned.map((l) => l.id));
+  const ids = orderedIds.filter((id) => valid.has(id));
+  if (ids.length === 0) return;
+
+  await prisma.$transaction(
+    ids.map((id, index) =>
+      prisma.list.update({ where: { id }, data: { position: index } }),
+    ),
+  );
+  revalidatePath("/lists");
+}
+
 export async function createList(formData: FormData) {
   const user = await requireUser();
   if (user.role === "ADMIN") return;

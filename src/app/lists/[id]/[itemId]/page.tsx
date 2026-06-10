@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { NoImageIcon } from "@/components/icons";
 import { requireUser } from "@/lib/auth";
 import { getItemAverage, formatAvg } from "@/lib/queries";
 import {
@@ -12,7 +13,7 @@ import {
 
 // Page détaillée d'un élément CONSULTÉ DEPUIS UNE LISTE.
 // Différences avec la page catalogue : on montre la note personnelle de
-// l'utilisateur (en plus de la moyenne), pas de bouton « Ajouter », et le
+// l'utilisateur (en plus de la moyenne), pas de bouton "Ajouter", et le
 // retour se fait vers la liste.
 export default async function ListItemDetailPage({
   params,
@@ -53,7 +54,7 @@ export default async function ListItemDetailPage({
         href={`/lists/${listItem.list.id}`}
         className="mb-4 inline-flex text-sm text-[var(--color-muted)] hover:underline"
       >
-        ← Retour à la liste « {listItem.list.name} »
+        ← Retour à la liste "{listItem.list.name}"
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[260px_1fr]">
@@ -66,9 +67,7 @@ export default async function ListItemDetailPage({
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="grid h-full place-items-center text-5xl text-[var(--color-muted)]/50">
-              x
-            </div>
+            <div className="grid h-full place-items-center text-5xl text-[var(--color-muted)]/50"><NoImageIcon /></div>
           )}
         </div>
 

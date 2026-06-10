@@ -7,7 +7,7 @@ import { getTopContributors } from "@/lib/queries";
 export const metadata: Metadata = {
   title: "Biblo",
   description:
-    "Vos listes de films, séries, animes, livres, mangas, jeux vidéo et bien plus.",
+    "Tes listes de films, séries, animes, livres, mangas, jeux vidéo et bien plus.",
 };
 
 export default async function RootLayout({

@@ -9,11 +9,13 @@ import { useState } from "react";
 export default function ConfirmButton({
   children,
   confirmLabel = "Confirmer ?",
+  yesLabel = "Oui, supprimer",
   className = "btn-danger text-sm",
   formAction,
 }: {
   children: React.ReactNode;
   confirmLabel?: string;
+  yesLabel?: string;
   className?: string;
   formAction?: (formData: FormData) => void | Promise<void>;
 }) {
@@ -28,10 +30,10 @@ export default function ConfirmButton({
   }
 
   return (
-    <span className="inline-flex items-center gap-2">
+    <span className="inline-flex flex-wrap items-center gap-2">
       <span className="text-sm text-[var(--color-muted)]">{confirmLabel}</span>
       <button type="submit" formAction={formAction} className="btn-danger text-sm">
-        Oui, supprimer
+        {yesLabel}
       </button>
       <button
         type="button"

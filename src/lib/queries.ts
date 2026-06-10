@@ -27,11 +27,21 @@ export async function getCatalog(opts: {
   q?: string;
   page?: number;
 }): Promise<CatalogResult> {
+  // Recherche permissive : insensible à la casse, par mots (chaque mot doit
+  // apparaître quelque part dans le nom, dans n'importe quel ordre).
+  const words = (opts.q ?? "").trim().split(/\s+/).filter(Boolean);
+
   const items = await prisma.item.findMany({
     where: {
       status: "APPROVED",
       ...(opts.typeId ? { typeId: opts.typeId } : {}),
-      ...(opts.q ? { name: { contains: opts.q } } : {}),
+      ...(words.length
+        ? {
+            AND: words.map((w) => ({
+              name: { contains: w, mode: "insensitive" as const },
+            })),
+          }
+        : {}),
     },
     include: {
       type: { select: { name: true } },
@@ -69,6 +79,37 @@ export async function getCatalog(opts: {
   cards = cards.slice(start, start + PAGE_SIZE);
 
   return { cards, page, totalPages, total };
+}
+
+// Les N éléments les plus récemment ajoutés au catalogue (validés).
+export async function getRecentItems(limit = 30): Promise<CatalogCard[]> {
+  const items = await prisma.item.findMany({
+    where: { status: "APPROVED" },
+    include: {
+      type: { select: { name: true } },
+      listItems: { select: { rating: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+  });
+
+  return items.map((item) => {
+    const ratings = item.listItems
+      .map((li) => li.rating)
+      .filter((r): r is number => r != null);
+    const avg =
+      ratings.length > 0
+        ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+        : null;
+    return {
+      id: item.id,
+      name: item.name,
+      image: item.image,
+      typeName: item.type.name,
+      avg,
+      ratingsCount: ratings.length,
+    };
+  });
 }
 
 // Moyenne des notes d'un élément précis.

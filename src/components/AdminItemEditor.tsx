@@ -7,6 +7,7 @@ import {
   type ActionState,
 } from "@/app/actions/items";
 import ConfirmButton from "@/components/ConfirmButton";
+import { NoImageIcon } from "@/components/icons";
 
 type ItemData = {
   id: string;
@@ -36,7 +37,7 @@ export default function AdminItemEditor({
 
   return (
     <div className="card border-amber-300/60 p-4">
-      <h2 className="mb-1 font-medium">🛠️ Espace administrateur</h2>
+      <h2 className="mb-1 font-medium">Espace administrateur</h2>
       <p className="mb-4 text-sm text-[var(--color-muted)]">
         Modifier ou supprimer cet élément du catalogue.
       </p>
@@ -78,8 +79,8 @@ export default function AdminItemEditor({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={preview} alt="" className="h-full w-full object-cover" />
               ) : (
-                <div className="grid h-full place-items-center text-xl text-[var(--color-muted)]/50">
-                  🖼️
+                <div className="grid h-full place-items-center text-[var(--color-muted)]/50">
+                  <NoImageIcon />
                 </div>
               )}
             </div>

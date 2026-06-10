@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { NoImageIcon } from "@/components/icons";
 import { requireUser } from "@/lib/auth";
 import {
   parseProgressFields,
@@ -90,9 +91,7 @@ export default async function FriendListPage({
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="grid h-full place-items-center text-xl text-[var(--color-muted)]/50">
-                      x
-                    </div>
+                    <div className="grid h-full place-items-center text-xl text-[var(--color-muted)]/50"><NoImageIcon /></div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">

@@ -20,7 +20,7 @@ export async function changeUsername(
     return { error: "Nom invalide (3 à 20 caractères : lettres, chiffres, _ . -)." };
   }
   if (username === me.username) {
-    return { error: "C'est déjà votre nom d'utilisateur." };
+    return { error: "C'est déjà ton nom d'utilisateur." };
   }
   const existing = await prisma.user.findUnique({ where: { username } });
   if (existing) return { error: "Ce nom d'utilisateur est déjà pris." };

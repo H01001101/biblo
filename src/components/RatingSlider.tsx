@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-// Curseur de note de 0 à 10 par pas de 0,5, avec une option « sans note ».
+// Curseur de note de 0 à 10 par pas de 0,5, avec une option "sans note".
 // Émet sa valeur via un <input type="hidden" name={name}> (vide = pas de note).
 export default function RatingSlider({
   name = "rating",

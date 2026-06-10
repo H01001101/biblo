@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Guide · Biblo",
-  description: "Découvrez tout ce que vous pouvez faire sur Biblo.",
+  description: "Découvre tout ce que tu peux faire sur Biblo.",
 };
 
 function Section({
@@ -103,7 +103,7 @@ export default async function GuidePage() {
       <Section title="Mes Listes">
         <Item>
           Crée autant de listes que tu veux (ex : "Mangas", "Films",
-          "Recettes de cuisisine"…)
+          "Recettes de cuisine"…)
         </Item>
         <Item>
           Le bouton <strong>Modifier</strong> permet de créer, renommer ou supprimer
@@ -127,8 +127,7 @@ export default async function GuidePage() {
         <Item>
           Les éléments sont <strong>triés par note</strong>. Pour départager ceux qui
           ont la <strong>même note</strong>, fais ton classement précis par
-          <strong> glisser-déposer</strong> (poignée ⠿) ou avec les flèches
-          <strong> ▲▼</strong>
+          <strong> glisser-déposer</strong> (poignée à gauche de chaque élément)
         </Item>
         <Item>
           <strong>Filtre </strong> ta liste par état d&apos;avancement (ex : ne voir

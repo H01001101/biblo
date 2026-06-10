@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getCatalog } from "@/lib/queries";
 import { getCurrentUser } from "@/lib/auth";
 import CatalogFilters from "@/components/CatalogFilters";
+import CatalogPagination from "@/components/CatalogPagination";
 import ItemCard from "@/components/ItemCard";
 
 export default async function HomePage({
@@ -24,16 +25,6 @@ export default async function HomePage({
     }),
     getCatalog({ typeId, q, minNote, page }),
   ]);
-
-  // Construit un lien de pagination en conservant les filtres courants.
-  function pageHref(p: number) {
-    const params = new URLSearchParams();
-    if (typeId) params.set("type", typeId);
-    if (q) params.set("q", q);
-    if (minNote) params.set("note", String(minNote));
-    params.set("page", String(p));
-    return `/?${params.toString()}`;
-  }
 
   return (
     <div>
@@ -73,6 +64,15 @@ export default async function HomePage({
         </div>
       ) : (
         <>
+          {catalog.totalPages > 1 && (
+            <div className="mb-4">
+              <CatalogPagination
+                page={catalog.page}
+                totalPages={catalog.totalPages}
+              />
+            </div>
+          )}
+
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {catalog.cards.map((c) => (
               <ItemCard key={c.id} {...c} />
@@ -80,20 +80,11 @@ export default async function HomePage({
           </div>
 
           {catalog.totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-2">
-              {catalog.page > 1 && (
-                <Link href={pageHref(catalog.page - 1)} className="btn-secondary">
-                  ← Précédent
-                </Link>
-              )}
-              <span className="text-sm text-[var(--color-muted)]">
-                Page {catalog.page} / {catalog.totalPages}
-              </span>
-              {catalog.page < catalog.totalPages && (
-                <Link href={pageHref(catalog.page + 1)} className="btn-secondary">
-                  Suivant →
-                </Link>
-              )}
+            <div className="mt-8">
+              <CatalogPagination
+                page={catalog.page}
+                totalPages={catalog.totalPages}
+              />
             </div>
           )}
         </>

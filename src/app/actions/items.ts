@@ -40,8 +40,8 @@ async function resolveImage(formData: FormData): Promise<string> {
   const urlFallback = String(formData.get("image") ?? "").trim();
 
   if (file instanceof File && file.size > 0) {
-    if (file.size > 5 * 1024 * 1024) {
-      throw new Error("L'image ne doit pas dépasser 5 Mo.");
+    if (file.size > 1 * 1024 * 1024) {
+      throw new Error("L'image ne doit pas dépasser 1 Mo.");
     }
     const ext = EXT_BY_TYPE[file.type];
     if (!ext) {

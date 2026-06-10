@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { createItem, type ActionState } from "@/app/actions/items";
+import { NoImageIcon } from "@/components/icons";
 
 type BuilderField = {
   label: string;
@@ -77,8 +78,8 @@ export default function CreateItemForm({
               // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="" className="h-full w-full object-cover" />
             ) : (
-              <div className="grid h-full place-items-center text-2xl text-[var(--color-muted)]/50">
-                ...
+              <div className="grid h-full place-items-center text-[var(--color-muted)]/50">
+                <NoImageIcon />
               </div>
             )}
           </div>
@@ -91,7 +92,7 @@ export default function CreateItemForm({
               className="block w-full text-sm text-[var(--color-muted)] file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-[var(--color-accent)] file:px-3 file:py-2 file:text-sm file:font-medium file:text-[var(--color-accent-ink)]"
             />
             <p className="text-xs text-[var(--color-muted)]">
-              Choisis une image depuis ton ordinateur (max 5 Mo)
+              Choisis une image depuis ton ordinateur (max 1 Mo)
             </p>
             <input
               name="image"

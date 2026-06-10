@@ -10,7 +10,19 @@ export default async function ListsPage() {
   const lists = await prisma.list.findMany({
     where: { ownerId: user.id },
     orderBy: { position: "asc" },
-    include: { _count: { select: { items: true } } },
+    include: {
+      _count: { select: { items: true } },
+      // Couverture = 1er élément (mieux noté, sinon le plus haut de la liste).
+      items: {
+        orderBy: [
+          { rating: { sort: "desc", nulls: "last" } },
+          { position: "asc" },
+          { addedAt: "asc" },
+        ],
+        take: 1,
+        select: { item: { select: { image: true } } },
+      },
+    },
   });
 
   return (
@@ -20,6 +32,7 @@ export default async function ListsPage() {
         name: l.name,
         hidden: l.hidden,
         count: l._count.items,
+        cover: l.items[0]?.item.image || null,
       }))}
     />
   );

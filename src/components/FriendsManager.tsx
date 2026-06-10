@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import ConfirmButton from "@/components/ConfirmButton";
 import {
   sendFriendRequest,
   acceptFriendRequest,
@@ -113,7 +114,9 @@ export default function FriendsManager({
                   </Link>
                   <form action={removeFriend}>
                     <input type="hidden" name="friendshipId" value={f.friendshipId} />
-                    <button className="btn-danger text-sm">Retirer</button>
+                    <ConfirmButton confirmLabel={`Retirer ${f.username} de tes amis ?`}>
+                      Retirer
+                    </ConfirmButton>
                   </form>
                 </div>
               </div>

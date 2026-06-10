@@ -16,7 +16,7 @@ export async function sendFriendRequest(
   const username = String(formData.get("username") ?? "").trim();
   if (!username) return { error: "Indiquez un nom d'utilisateur." };
   if (username === me.username) {
-    return { error: "Vous ne pouvez pas vous ajouter vous-même." };
+    return { error: "Tu ne peux pas t'ajouter toi-même." };
   }
 
   const target = await prisma.user.findUnique({ where: { username } });
@@ -37,7 +37,7 @@ export async function sendFriendRequest(
     return {
       error:
         existing.status === "ACCEPTED"
-          ? "Vous êtes déjà amis."
+          ? "Tu es déjà ami avec cette personne."
           : "Une demande est déjà en attente.",
     };
   }
