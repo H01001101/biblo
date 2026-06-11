@@ -14,7 +14,7 @@ export default async function ProfilePage() {
       <div className="space-y-6">
         <h1 className="text-2xl font-semibold">Profil</h1>
         <AccountSettings username={me.username} />
-        <ThemeSelector theme={me.theme} uiStyle={me.uiStyle} />
+        <ThemeSelector theme={me.theme} uiStyle={me.uiStyle} interfaceTheme={me.interfaceTheme} />
       </div>
     );
   }
@@ -52,7 +52,7 @@ export default async function ProfilePage() {
       </section>
 
       <section>
-        <ThemeSelector theme={me.theme} uiStyle={me.uiStyle} />
+        <ThemeSelector theme={me.theme} uiStyle={me.uiStyle} interfaceTheme={me.interfaceTheme} />
       </section>
 
       <section>

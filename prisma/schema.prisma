@@ -20,6 +20,9 @@ model User {
   role         String   @default("USER") // "USER" | "ADMIN"
   theme        String   @default("light") // "light" | "dark"
   uiStyle      String   @default("modern") // "modern" (iOS 26) | "classic"
+  // Interface thématique : "none" = réglages classiques (theme/uiStyle).
+  // Sinon (ex: "medieval") elle prend le dessus sur theme/uiStyle.
+  interfaceTheme String @default("none")
   createdAt    DateTime @default(now())
 
   lists            List[]

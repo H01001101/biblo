@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { Cinzel, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { getCurrentUser } from "@/lib/auth";
 import { getTopContributors } from "@/lib/queries";
+
+// Polices de l'interface thématique "Medieval Fantasy" (chargées seulement
+// quand le navigateur en a besoin, c.-à-d. quand le thème est actif).
+const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-display", weight: ["500", "700"] });
+const garamond = EB_Garamond({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {
   title: "Biblo",
@@ -19,13 +25,24 @@ export default async function RootLayout({
     getCurrentUser(),
     getTopContributors(3),
   ]);
+  // Une interface thématique (ex: "medieval") prend le dessus sur les réglages
+  // classiques thème/style. Sinon, on applique theme (clair/sombre) + uiStyle.
+  const themedInterface =
+    user?.interfaceTheme && user.interfaceTheme !== "none"
+      ? user.interfaceTheme
+      : null;
+
   const isDark = user?.theme === "dark";
-  // Style moderne (iOS 26) par défaut ; "classic" rétablit l'ancienne UI.
   const isModern = user?.uiStyle !== "classic";
+
   const htmlClass = [
     "h-full antialiased",
-    isDark ? "dark" : "",
-    isModern ? "ui-modern" : "ui-classic",
+    // variables de polices (utilisées uniquement par l'interface thématique)
+    cinzel.variable,
+    garamond.variable,
+    themedInterface
+      ? `theme-${themedInterface}`
+      : `${isDark ? "dark " : ""}${isModern ? "ui-modern" : "ui-classic"}`,
   ]
     .filter(Boolean)
     .join(" ");

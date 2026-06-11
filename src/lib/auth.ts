@@ -9,6 +9,7 @@ export type CurrentUser = {
   role: string;
   theme: string;
   uiStyle: string;
+  interfaceTheme: string;
 };
 
 // Renvoie l'utilisateur connecté, ou null.
@@ -17,7 +18,14 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   if (!userId) return null;
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, username: true, role: true, theme: true, uiStyle: true },
+    select: {
+      id: true,
+      username: true,
+      role: true,
+      theme: true,
+      uiStyle: true,
+      interfaceTheme: true,
+    },
   });
   return user;
 }

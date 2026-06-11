@@ -68,7 +68,9 @@ export default function Nav({ user }: { user: CurrentUser | null }) {
             alt="Biblo"
             className="brand-badge h-9 w-9 rounded-full object-cover ring-1 ring-[var(--color-line)]"
           />
-          <span className="text-lg font-semibold tracking-tight">Biblo</span>
+          <span className="brand-title text-lg font-semibold tracking-tight">
+            Biblo
+          </span>
         </Link>
 
         <nav className="flex flex-1 items-center gap-1 overflow-x-auto">

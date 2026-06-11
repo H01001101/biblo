@@ -165,3 +165,113 @@ body {
 .ui-modern .brand-badge {
   box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--color-accent) 70%, transparent);
 }
+
+/* =========================================================================
+   INTERFACE THÉMATIQUE — "Medieval Fantasy"
+   Activée par la classe .theme-medieval sur <html> ; prend TOUT le dessus
+   sur les réglages clair/sombre et moderne/classique (ces classes ne sont
+   alors pas présentes). Ambiance parchemin, encre brune, accents bordeaux/or.
+   ========================================================================= */
+
+.theme-medieval {
+  --color-bg: #e7d8b5;
+  --color-surface: #f4ecd6;
+  --color-surface-2: #e3d2ab;
+  --color-ink: #3a2a16;
+  --color-muted: #7c6743;
+  --color-line: #b9974f;
+  --color-accent: #7a1f1f;
+  --color-accent-ink: #f7efd8;
+}
+
+/* Fond parchemin texturé */
+.theme-medieval body {
+  background:
+    radial-gradient(900px 600px at 15% -10%, rgba(120, 90, 40, 0.12), transparent 55%),
+    radial-gradient(900px 700px at 100% 110%, rgba(110, 50, 25, 0.12), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(60, 40, 15, 0.02) 0 2px, transparent 2px 5px),
+    var(--color-bg);
+  background-attachment: fixed;
+  font-family: var(--font-serif), Georgia, "Times New Roman", serif;
+  color: var(--color-ink);
+}
+
+/* Titres et marque en capitales gravées */
+.theme-medieval h1,
+.theme-medieval h2,
+.theme-medieval h3,
+.theme-medieval .brand-title {
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: 0.02em;
+}
+
+/* Panneaux : parchemin encadré */
+.theme-medieval .card {
+  background-color: color-mix(in srgb, var(--color-surface) 92%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--color-line) 40%, transparent),
+    inset 0 0 24px color-mix(in srgb, #6e4a18 12%, transparent),
+    0 8px 18px -12px rgba(50, 30, 10, 0.6);
+}
+
+/* Barre de navigation : bandeau parchemin à liseré doré */
+.theme-medieval header {
+  background-color: color-mix(in srgb, var(--color-surface) 90%, transparent) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-bottom: 3px double var(--color-line);
+}
+
+/* Boutons */
+.theme-medieval .btn,
+.theme-medieval .btn-primary,
+.theme-medieval .btn-secondary,
+.theme-medieval .btn-ghost,
+.theme-medieval .btn-danger {
+  border-radius: 0.45rem;
+  font-family: var(--font-display), Georgia, serif;
+  letter-spacing: 0.02em;
+}
+.theme-medieval .btn-primary {
+  background-image: linear-gradient(180deg, #8f2b2b, #6e1717);
+  color: var(--color-accent-ink);
+  border: 1px solid var(--color-line);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 200, 0.25);
+}
+.theme-medieval .btn-secondary {
+  background-color: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+}
+.theme-medieval .btn-secondary:hover {
+  background-color: var(--color-surface-2);
+}
+.theme-medieval .btn-ghost {
+  color: var(--color-ink);
+}
+.theme-medieval .btn-ghost:hover {
+  background-color: var(--color-surface-2);
+}
+
+/* Champs de saisie : parchemin gravé */
+.theme-medieval .input {
+  background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: 0.4rem;
+  color: var(--color-ink);
+  box-shadow: inset 0 1px 3px rgba(80, 55, 20, 0.18);
+}
+
+/* Étiquettes / badges */
+.theme-medieval .badge {
+  background-color: color-mix(in srgb, var(--color-line) 24%, transparent);
+  color: #5a3d18;
+  border: 1px solid color-mix(in srgb, var(--color-line) 60%, transparent);
+}
+
+/* Liens d'accent un peu plus chauds */
+.theme-medieval a {
+  text-underline-offset: 2px;
+}

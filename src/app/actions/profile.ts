@@ -45,6 +45,16 @@ export async function setUiStyle(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
+const INTERFACE_THEMES = ["none", "medieval"];
+
+export async function setInterfaceTheme(formData: FormData) {
+  const me = await requireUser();
+  const raw = String(formData.get("interfaceTheme") ?? "none");
+  const interfaceTheme = INTERFACE_THEMES.includes(raw) ? raw : "none";
+  await prisma.user.update({ where: { id: me.id }, data: { interfaceTheme } });
+  revalidatePath("/", "layout");
+}
+
 export async function changePassword(
   _prev: ProfileState,
   formData: FormData,
