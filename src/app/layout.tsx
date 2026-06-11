@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Cinzel, EB_Garamond } from "next/font/google";
+import {
+  Cinzel,
+  EB_Garamond,
+  Pixelify_Sans,
+  Pirata_One,
+} from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { getCurrentUser } from "@/lib/auth";
 import { getTopContributors } from "@/lib/queries";
 
-// Polices de l'interface thématique "Medieval Fantasy" (chargées seulement
-// quand le navigateur en a besoin, c.-à-d. quand le thème est actif).
+// Polices des interfaces thématiques (chargées par le navigateur uniquement
+// quand le thème correspondant est actif).
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-display", weight: ["500", "700"] });
 const garamond = EB_Garamond({ subsets: ["latin"], variable: "--font-serif" });
+const pixel = Pixelify_Sans({ subsets: ["latin"], variable: "--font-pixel" });
+const pirate = Pirata_One({ subsets: ["latin"], variable: "--font-pirate", weight: "400" });
 
 export const metadata: Metadata = {
   title: "Biblo",
@@ -37,9 +44,11 @@ export default async function RootLayout({
 
   const htmlClass = [
     "h-full antialiased",
-    // variables de polices (utilisées uniquement par l'interface thématique)
+    // variables de polices (utilisées uniquement par les interfaces thématiques)
     cinzel.variable,
     garamond.variable,
+    pixel.variable,
+    pirate.variable,
     themedInterface
       ? `theme-${themedInterface}`
       : `${isDark ? "dark " : ""}${isModern ? "ui-modern" : "ui-classic"}`,

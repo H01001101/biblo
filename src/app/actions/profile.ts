@@ -45,7 +45,7 @@ export async function setUiStyle(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
-const INTERFACE_THEMES = ["none", "medieval"];
+const INTERFACE_THEMES = ["none", "medieval", "pixel", "win2000", "onepiece"];
 
 export async function setInterfaceTheme(formData: FormData) {
   const me = await requireUser();

@@ -275,3 +275,228 @@ body {
 .theme-medieval a {
   text-underline-offset: 2px;
 }
+
+/* =========================================================================
+   INTERFACE THÉMATIQUE — "Pixel art" (inspiration Stardew Valley)
+   ========================================================================= */
+.theme-pixel {
+  --color-bg: #6fa342;
+  --color-surface: #fff4d6;
+  --color-surface-2: #f0dcab;
+  --color-ink: #3a2a16;
+  --color-muted: #6b5836;
+  --color-line: #7a4a22;
+  --color-accent: #c8521b;
+  --color-accent-ink: #fff4d6;
+}
+.theme-pixel body {
+  background:
+    radial-gradient(circle at 50% -15%, #9bd06a, transparent 60%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0 3px, transparent 3px 6px),
+    var(--color-bg);
+  background-attachment: fixed;
+  font-family: var(--font-pixel), "Courier New", monospace;
+  color: var(--color-ink);
+}
+.theme-pixel h1,
+.theme-pixel h2,
+.theme-pixel h3,
+.theme-pixel .brand-title {
+  font-family: var(--font-pixel), monospace;
+  letter-spacing: 0.5px;
+}
+.theme-pixel .card {
+  background: var(--color-surface);
+  border: 3px solid var(--color-line);
+  border-radius: 0;
+  box-shadow: 0 4px 0 0 rgba(0, 0, 0, 0.25), inset 0 0 0 2px #e9cf95;
+}
+.theme-pixel header {
+  background: var(--color-surface) !important;
+  border-bottom: 3px solid var(--color-line);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.theme-pixel .btn,
+.theme-pixel .btn-primary,
+.theme-pixel .btn-secondary,
+.theme-pixel .btn-ghost,
+.theme-pixel .btn-danger {
+  border-radius: 0;
+  font-family: var(--font-pixel), monospace;
+}
+.theme-pixel .btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  border: 3px solid var(--color-line);
+  box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.3);
+}
+.theme-pixel .btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: 3px solid var(--color-line);
+  box-shadow: 0 3px 0 0 rgba(0, 0, 0, 0.2);
+}
+.theme-pixel .btn-primary:active,
+.theme-pixel .btn-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3);
+}
+.theme-pixel .input {
+  background: #fffdf5;
+  border: 3px solid var(--color-line);
+  border-radius: 0;
+  color: var(--color-ink);
+}
+.theme-pixel .badge {
+  background: #e7c987;
+  border: 2px solid var(--color-line);
+  border-radius: 0;
+  color: #5a3d18;
+}
+
+/* =========================================================================
+   INTERFACE THÉMATIQUE — "Windows 2000" (panneaux gris biseautés)
+   ========================================================================= */
+.theme-win2000 {
+  --color-bg: #3a6ea5;
+  --color-surface: #d4d0c8;
+  --color-surface-2: #c0c0c0;
+  --color-ink: #000000;
+  --color-muted: #404040;
+  --color-line: #808080;
+  --color-accent: #0a246a;
+  --color-accent-ink: #ffffff;
+}
+.theme-win2000 body {
+  background: var(--color-bg);
+  font-family: Tahoma, "Segoe UI", Verdana, sans-serif;
+  font-size: 13px;
+  color: #000;
+}
+.theme-win2000 h1,
+.theme-win2000 h2,
+.theme-win2000 h3,
+.theme-win2000 .brand-title {
+  font-family: Tahoma, Verdana, sans-serif;
+  font-weight: 700;
+}
+.theme-win2000 .card {
+  background: var(--color-surface);
+  border-radius: 0;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+.theme-win2000 header {
+  background: var(--color-surface) !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 2px solid;
+  border-color: #ffffff #808080 #404040 #ffffff;
+}
+.theme-win2000 .btn,
+.theme-win2000 .btn-primary,
+.theme-win2000 .btn-secondary,
+.theme-win2000 .btn-ghost,
+.theme-win2000 .btn-danger {
+  border-radius: 0;
+  font-family: Tahoma, Verdana, sans-serif;
+  background: var(--color-surface);
+  color: #000;
+  border: 2px solid;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+}
+.theme-win2000 .btn-primary {
+  font-weight: 700;
+}
+.theme-win2000 .btn-primary:active,
+.theme-win2000 .btn-secondary:active,
+.theme-win2000 .btn-danger:active {
+  border-color: #404040 #ffffff #ffffff #404040;
+  box-shadow: inset 1px 1px 0 #808080;
+}
+.theme-win2000 .input {
+  background: #ffffff;
+  border-radius: 0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+  color: #000;
+}
+.theme-win2000 .badge {
+  background: #0a246a;
+  color: #fff;
+  border-radius: 0;
+}
+
+/* =========================================================================
+   INTERFACE THÉMATIQUE — "One Piece" (mer ensoleillée, parchemin, rouge/or)
+   ========================================================================= */
+.theme-onepiece {
+  --color-bg: #58b0e0;
+  --color-surface: #fff7e6;
+  --color-surface-2: #ffe9bf;
+  --color-ink: #2a1c0c;
+  --color-muted: #7a5a36;
+  --color-line: #d4a23a;
+  --color-accent: #d8362f;
+  --color-accent-ink: #fff7e6;
+}
+.theme-onepiece body {
+  background:
+    radial-gradient(700px 360px at 50% -5%, rgba(255, 244, 200, 0.85), transparent 60%),
+    linear-gradient(180deg, #bfe6f7 0%, #8fd0ef 45%, #58b0e0 100%);
+  background-attachment: fixed;
+  color: var(--color-ink);
+}
+.theme-onepiece h1,
+.theme-onepiece h2,
+.theme-onepiece h3,
+.theme-onepiece .brand-title {
+  font-family: var(--font-pirate), Impact, sans-serif;
+  color: #b5271f;
+  letter-spacing: 0.5px;
+}
+.theme-onepiece .card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-line);
+  border-radius: 0.6rem;
+  box-shadow: 0 6px 0 -2px rgba(20, 60, 90, 0.25), inset 0 0 0 2px #fffdf6;
+}
+.theme-onepiece header {
+  background: var(--color-surface) !important;
+  border-bottom: 4px solid var(--color-accent);
+  box-shadow: 0 2px 0 0 var(--color-line);
+}
+.theme-onepiece .btn,
+.theme-onepiece .btn-primary,
+.theme-onepiece .btn-secondary,
+.theme-onepiece .btn-ghost,
+.theme-onepiece .btn-danger {
+  border-radius: 0.5rem;
+}
+.theme-onepiece .btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  border: 2px solid var(--color-line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
+.theme-onepiece .btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: 2px solid var(--color-line);
+}
+.theme-onepiece .input {
+  background: #fffdf6;
+  border: 2px solid var(--color-line);
+  border-radius: 0.5rem;
+  color: var(--color-ink);
+}
+.theme-onepiece .badge {
+  background: #ffe1a6;
+  color: #8a3a12;
+  border: 1px solid var(--color-line);
+}

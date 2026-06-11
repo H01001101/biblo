@@ -23,26 +23,29 @@ export default function ThemeSelector({
       <div>
         <p className="label">Interface thématique</p>
         <div className="flex flex-wrap gap-2">
-          <form action={setInterfaceTheme}>
-            <input type="hidden" name="interfaceTheme" value="none" />
-            <button
-              type="submit"
-              className={!themed ? "btn-primary" : "btn-secondary"}
-            >
-              Aucune (classique)
-            </button>
-          </form>
-          <form action={setInterfaceTheme}>
-            <input type="hidden" name="interfaceTheme" value="medieval" />
-            <button
-              type="submit"
-              className={
-                interfaceTheme === "medieval" ? "btn-primary" : "btn-secondary"
-              }
-            >
-              Medieval Fantasy
-            </button>
-          </form>
+          {[
+            { value: "none", label: "Aucune (classique)" },
+            { value: "medieval", label: "Medieval Fantasy" },
+            { value: "pixel", label: "Pixel art" },
+            { value: "win2000", label: "Windows 2000" },
+            { value: "onepiece", label: "One Piece" },
+          ].map((opt) => {
+            const active =
+              opt.value === "none"
+                ? !themed
+                : interfaceTheme === opt.value;
+            return (
+              <form action={setInterfaceTheme} key={opt.value}>
+                <input type="hidden" name="interfaceTheme" value={opt.value} />
+                <button
+                  type="submit"
+                  className={active ? "btn-primary" : "btn-secondary"}
+                >
+                  {opt.label}
+                </button>
+              </form>
+            );
+          })}
         </div>
         {themed && (
           <p className="mt-2 text-xs text-[var(--color-muted)]">
