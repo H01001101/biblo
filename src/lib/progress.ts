@@ -95,6 +95,39 @@ export function parseProgressFields(json: string): ProgressField[] {
   }
 }
 
+// Valide/normalise une chaîne JSON de champs de progression (saisie utilisateur).
+// Génère une clé stable à partir du libellé. Ignore les entrées invalides.
+export function sanitizeProgressFields(raw: string): ProgressField[] {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw || "[]");
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  const fields: ProgressField[] = [];
+  for (const f of parsed) {
+    if (!f || typeof f !== "object") continue;
+    const obj = f as Record<string, unknown>;
+    const label = String(obj.label ?? "").trim();
+    const key = String(obj.key ?? label)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "_");
+    if (!label || !key) continue;
+    if (obj.kind === "unit-number") {
+      const units = Array.isArray(obj.units)
+        ? obj.units.map((u) => String(u).trim()).filter(Boolean)
+        : [];
+      if (units.length === 0) continue;
+      fields.push({ kind: "unit-number", key, label, units });
+    } else {
+      fields.push({ kind: "number", key, label });
+    }
+  }
+  return fields;
+}
+
 export function parseProgressValues(json: string | null | undefined): ProgressValues {
   if (!json) return {};
   try {

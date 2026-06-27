@@ -31,9 +31,14 @@ export default async function AdminPage() {
             Valide les propositions d'éléments
           </p>
         </div>
-        <Link href="/admin/users" className="btn-secondary">
-          Gérer les utilisateurs
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/types" className="btn-secondary">
+            Gérer les types
+          </Link>
+          <Link href="/admin/users" className="btn-secondary">
+            Gérer les utilisateurs
+          </Link>
+        </div>
       </div>
 
       <h2 className="text-lg font-semibold">
